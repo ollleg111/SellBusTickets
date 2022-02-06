@@ -3,7 +3,6 @@ package com.example.salestickets.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.engine.internal.Cascade;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -58,19 +57,6 @@ public class User {
     @Column(name = "USER_STATUS")
     private UserStatus userStatus;
 
-//    @OneToOne(cascade = CascadeType.REMOVE)
-//    @Column(name = "PAYMENT_ID")
-//    private Payment payment;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Payment payment;
 }
-
-/*
-                       id numeric,
-                       CONSTRAINT user_pk PRIMARY KEY (id),
-                       first_name varchar(50) NOT NULL,
-                       last_name varchar(50) NOT NULL,
-                       phone_number varchar(20) NOT NULL,
-                       e_mail varchar(50) NOT NULL,
-                       password varchar(50) NOT NULL,
-                       user_status varchar(5) default 'USER',
-                       check (user_status = 'ADMIN' or user_status = 'USER')
- */

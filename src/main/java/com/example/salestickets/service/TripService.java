@@ -3,6 +3,7 @@ package com.example.salestickets.service;
 import com.example.salestickets.dao.TripDAO;
 import com.example.salestickets.exceptions.DaoException;
 import com.example.salestickets.exceptions.NotFoundException;
+import com.example.salestickets.model.TicketStatus;
 import com.example.salestickets.model.Trip;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,11 +41,16 @@ public class TripService {
     public List<Trip> getTripsListWithDateAndQuantity() throws DaoException {
         return tripDAO.getTripsListWithDateAndQuantity();
     }
+
     public String getInfoByTripId(Long tripId) throws DaoException, NotFoundException {
         tripValidation(tripId);
 
-//        return ticketDAO.getTicketsListWithFilter();
-        return null;
+        if(!tripDAO.validationStatus(tripId, TicketStatus.NEW)) {
+            if(tripDAO.validationStatus(tripId, TicketStatus.FAILED)) {
+                return tripDAO.findQuantityTicketsWhenStatusFail(tripId).toString();
+            }
+        }
+        return "DONE";
     }
 
     public void quantityTripsValidation(Long quantity, Long tripId) throws DaoException, NotFoundException {

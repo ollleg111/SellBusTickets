@@ -3,50 +3,75 @@ CREATE SEQUENCE PAYMENTS_SEQ INCREMENT BY 1 MAXVALUE 1000 CYCLE;
 CREATE SEQUENCE TICKETS_SEQ INCREMENT BY 1 MAXVALUE 1000 CYCLE;
 CREATE SEQUENCE TRIP_SEQ INCREMENT BY 1 MAXVALUE 1000 CYCLE;
 
-CREATE TABLE users (
-                       id numeric,
-                       CONSTRAINT user_pk PRIMARY KEY (id),
-                       first_name varchar(50) NOT NULL,
-                       last_name varchar(50) NOT NULL,
-                       phone_number varchar(20) NOT NULL,
-                       e_mail varchar(50) NOT NULL,
-                       password varchar(50) NOT NULL,
-                       user_status varchar(5) default 'USER',
-                       check (user_status = 'ADMIN' or user_status = 'USER')
-);
-
-CREATE TABLE trips (
-                       id numeric,
-                       CONSTRAINT trip_pk PRIMARY KEY (id),
-                       place_from varchar(50) not null,
-                       place_to varchar(50) not null,
-                       departure_date TIMESTAMP,
-                       cost numeric not null,
-                       quantity numeric
-);
-
-CREATE TABLE payments (
-                          id numeric,
-                          CONSTRAINT payment_pk PRIMARY KEY (id),
-                          user_id numeric NOT NULL,
-                          CONSTRAINT USER_FK FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
-                          trip_id numeric NOT NULL,
-                          CONSTRAINT TRIP_FK FOREIGN KEY (TRIP_ID) REFERENCES TRIPS(ID),
-                          due_date TIMESTAMP
-);
-
-CREATE TABLE tickets (
-                         id numeric,
-                         CONSTRAINT ticket_pk PRIMARY KEY (id),
-                         trip_id numeric NOT NULL,
-                         CONSTRAINT TRIP_FK FOREIGN KEY (TRIP_ID) REFERENCES TRIPS(ID),
-                         payment_id numeric NOT NULL,
-                         CONSTRAINT PAYMENT_FK FOREIGN KEY (PAYMENT_ID) REFERENCES PAYMENTS(ID),
-                         ticket_status varchar (6),
-                         check(ticket_status IN('NEW','FAILED','DONE'))
-);
-
 drop table users;
-drop table payments;
 drop table tickets;
 drop table trips;
+drop table payments;
+drop table payments_tickets;
+
+insert into USERS (id, first_name, last_name, phone_number, e_mail, password, user_status) values (1, 'Ade', 'Flieger', '948-926-1740', 'aflieger0@scientificamerican.com', 'hDYuEKjFrshe', 'ADMIN');
+insert into USERS (id, first_name, last_name, phone_number, e_mail, password, user_status) values (2, 'Taryn', 'Ramalho', '267-278-7268', 'tramalho1@google.it', '9ddHnRusSS', 'USER');
+insert into USERS (id, first_name, last_name, phone_number, e_mail, password, user_status) values (3, 'Rubetta', 'Kares', '749-883-1389', 'rkares2@storify.com', '64n7VSRF', 'USER');
+
+insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (1, 'Yanjiang', 'Armopa', '2022-05-04 20:00:00', 94, 35);
+insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (2, 'Alicia', 'Usevia', '2022-04-04 20:00:00', 5, 39);
+insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (3, 'Cristalina', 'Myski', '2022-06-04 20:00:00', 14, 15);
+
+insert into TICKETS (id, trip_id, ticket_status) values (1, 1, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (2, 2, 'FAILED');
+insert into TICKETS (id, trip_id, ticket_status) values (3, 1, 'DONE');
+insert into TICKETS (id, trip_id, ticket_status) values (4, 1, 'FAILED');
+insert into TICKETS (id, trip_id, ticket_status) values (5, 1, 'DONE');
+insert into TICKETS (id, trip_id, ticket_status) values (6, 2, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (7, 1, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (8, 1, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (9, 1, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (10, 1, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (11, 1, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (12, 1, 'NEW');
+
+insert into PAYMENTS (id, user_id, trip_id) values (1, 1, 1);
+insert into PAYMENTS (id, user_id, trip_id) values (2, 1, 1);
+insert into PAYMENTS (id, user_id, trip_id) values (3, 2, 2);
+insert into PAYMENTS (id, user_id, trip_id) values (4, 3, 3);
+insert into PAYMENTS (id, user_id, trip_id) values (5, 3, 2);
+insert into PAYMENTS (id, user_id, trip_id) values (6, 3, 3);
+insert into PAYMENTS (id, user_id, trip_id) values (7, 2, 1);
+
+SELECT * FROM TRIPS T WHERE (T.DEPARTURE_DATE = current_date OR T.DEPARTURE_DATE > current_date) AND T.QUANTITY >25;
+SELECT * FROM TRIPS T WHERE (T.DEPARTURE_DATE = current_date OR T.DEPARTURE_DATE > current_date) AND T.QUANTITY >0;
+
+SELECT TRIPS FROM TICKETS INNER JOIN TRIPS ON TICKETS.TRIP_ID = TRIPS.ID WHERE TICKETS.ID = 1;
+SELECT TRIPS FROM TICKETS INNER JOIN TRIPS ON TICKETS.TRIP_ID = TRIPS.ID WHERE TICKETS.ID = 4;
+SELECT TRIPS FROM TICKETS INNER JOIN TRIPS ON TICKETS.TRIP_ID = TRIPS.ID WHERE TICKETS.ID = 2;
+
+SELECT TICKET_STATUS FROM TICKETS WHERE ID = 1;
+SELECT TICKET_STATUS FROM TICKETS WHERE ID = 2;
+
+SELECT TRIPS.PLACE_FROM,TICKETS.TICKET_STATUS FROM TICKETS INNER JOIN TRIPS ON TICKETS.TRIP_ID = TRIPS.ID WHERE TICKETS.ID = 12;
+
+SELECT PAYMENTS.ID FROM PAYMENTS WHERE USER_ID = 3 AND TRIP_ID = 2;
+
+SELECT PAYMENTS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID WHERE USER_ID = 1 AND TRIPS.COST = 94;
+SELECT PAYMENTS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID WHERE USER_ID = 1 AND TRIPS.COST = 14;
+
+insert into PAYMENTS (id, user_id, trip_id) values (10, 1, (SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = 94));
+
+SELECT TRIPS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID WHERE PAYMENTS.ID = 5;
+SELECT TICKET_STATUS FROM TICKETS WHERE TICKETS.TRIP_ID = 1;
+
+SELECT TICKET_STATUS FROM TICKETS WHERE TICKETS.TRIP_ID = (SELECT TRIPS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID WHERE PAYMENTS.ID = 5);
+
+insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (25, 'Cristalina', 'Myski', '2022-06-04 20:00:00', 14, 15);
+insert into TICKETS (id, trip_id, ticket_status) values (20, 25, 'DONE');
+insert into TICKETS (id, trip_id, ticket_status) values (21, 25, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (22, 25, 'NEW');
+insert into TICKETS (id, trip_id, ticket_status) values (23, 25, 'DONE');
+insert into TICKETS (id, trip_id, ticket_status) values (24, 25, 'FAILED');
+
+SELECT TICKET_STATUS FROM TICKETS WHERE TRIP_ID = 25 AND TICKET_STATUS ='NEW';
+
+SELECT QUANTITY FROM TRIPS WHERE TRIPS.ID = 25;
+
+
+

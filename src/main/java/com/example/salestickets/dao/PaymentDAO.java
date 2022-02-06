@@ -4,6 +4,8 @@ import com.example.salestickets.exceptions.DaoException;
 import com.example.salestickets.model.Payment;
 import org.hibernate.HibernateException;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -18,12 +20,27 @@ public class PaymentDAO extends GeneralDAO<Payment>{
         setTypeParameterClass(Payment.class);
     }
 
-    private final String FIND_TICKET_STATUS_BY_PAYMENT_ID =
-            "SELECT T.TICKET_STATUS FROM TICKETS T INNER JOIN PAYMENTS P ON P.ID = ?";
-
+    //TEST OK
     private final String FIND_PAYMENT_ID_WITH_USER_ID_AND_COST =
-            "SELECT P.PAYMENTS_STATUS FROM PAYMENTS P INNER JOIN USERS U ON U.ID = ?" +
-                    "INNER JOIN ";
+            "SELECT PAYMENTS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID WHERE USER_ID = ? " +
+                    "AND TRIPS.COST = ?";
+
+
+    //TEST OK
+    private final String ADD_PAYMENT_BY_USER_ID_AND_COST =
+            "INSERT INTO PAYMENTS (USER_ID, TRIP_ID) " +
+                    "values (USER_ID = ?, (SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?))";
+
+    //TEST OK
+    private final String ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID =
+            "INSERT INTO PAYMENTS (USER_ID, TRIP_ID) " +
+                    "values (USER_ID = ?, (TRIPS.ID = ?))";
+
+    //TEST OK
+    private final String FIND_TICKET_STATUS_BY_PAYMENT_ID =
+            "SELECT TICKET_STATUS FROM TICKETS WHERE TICKETS.TRIP_ID =" +
+                    " (SELECT TRIPS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID " +
+                    "WHERE PAYMENTS.ID = ?)";
 
     private final String alarmMessage = PaymentDAO.class.getName();
 
@@ -58,20 +75,36 @@ public class PaymentDAO extends GeneralDAO<Payment>{
             return (String) query.getSingleResult();
         } catch (DaoException e) {
             throw new HibernateException("Operation with user data was filed in method" +
-                    " findTicketStatusById(Long id) from class " + alarmMessage);
+                    " findTicketStatusByPaymentId(Long id) from class " + alarmMessage);
         }
     }
 
-    public Long getPaymentIdWithFilter(Long userId, Long cost) throws DaoException{
+    public Long addPaymentsByUserIdAndCost(Long userId, Long cost) throws DaoException {
         try {
-            Query query = entityManager.createNativeQuery(FIND_PAYMENT_ID_WITH_USER_ID_AND_COST);
+            Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_COST);
             query.setParameter(1, userId);
-            query.setParameter(1, cost);
+            query.setParameter(2, cost);
 
             return (Long) query.getSingleResult();
         } catch (DaoException e) {
             throw new HibernateException("Operation with user data was filed in method" +
-                    " getPaymentIdWithFilter(Long userId, Long cost) from class " + alarmMessage);
+                    " addPaymentsByPerson(Long userId, Long cost) from class " + alarmMessage);
+        }
+    }
+
+    @Transactional
+    public Payment addPaymentsByUserIdAndTripId(Long userId, Long tripId) throws DaoException {
+        try {
+            Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID);
+            query.setParameter(1, userId);
+            query.setParameter(2, tripId);
+
+            return (Payment) query.getSingleResult();
+        } catch (DaoException e) {
+            throw new HibernateException("Operation with user data was filed in method" +
+                    " addPaymentsByUserIdAndTripId(Long userId, Long cost) from class " + alarmMessage);
         }
     }
 }
+
+

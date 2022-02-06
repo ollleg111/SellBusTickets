@@ -5,9 +5,7 @@ import com.example.salestickets.dao.TicketDAO;
 import com.example.salestickets.dao.TripDAO;
 import com.example.salestickets.exceptions.DaoException;
 import com.example.salestickets.exceptions.NotFoundException;
-import com.example.salestickets.model.Payment;
 import com.example.salestickets.model.Ticket;
-import com.example.salestickets.model.Trip;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -47,31 +45,32 @@ public class TicketService {
         При заказе билета необходимо сохранить билет в базу,
         вычесть билет из количества доступных билетов на рейсе и
         создать платеж в платежной системе.
+
+        Сервис покупки билета.
+        На вход:
+        - ФИО
+        - идентификатор рейса.
+        На выходе: идентификатор билета.
      */
     public Long buyTicketWithPersonAndTripId(String firstName, String lastName, Long tripId)
             throws DaoException, NotFoundException {
-            Ticket ticket = ticketDAO.getTicketIdWithPersonIdAndTripId(
-                    userService.findUserIdByFirstAndLastName(firstName, lastName),
-                    tripId);
-            tripService.quantityTripsValidation(ticket.getTrip().getQuantity(), tripId);
-            Payment payment = ticket.getPayment();
+        Long userId = userService.findUserIdByFirstAndLastName(firstName, lastName);
 
-//            BuyingTicket buyingTicket = new BuyingTicket(TicketDAO ticketDAO, TripDAO tripDAO, PaymentDAO paymentDAO);
-            ticketDAO.save(ticket);
-            tripDAO.updateQuantity();
-            paymentDAO.save(payment);
+        //При заказе билета необходимо сохранить билет в базу
+        Ticket ticket = ticketDAO.addTicketWithPersonIdAndTripId(userId, tripId);
+        tripService.quantityTripsValidation(ticket.getTrip().getQuantity(), tripId);
+
+        //вычесть билет из количества доступных билетов на рейсе
+        tripDAO.updateQuantity();
+
+        //создать платеж в платежной системе
+        paymentDAO.addPaymentsByUserIdAndTripId(userId, tripId);
         return ticket.getId();
     }
 
-    public String getInfoByTicketId(Long ticketId) throws DaoException, NotFoundException {
+    public String findTripAndStatusByTicketId(Long ticketId) throws DaoException, NotFoundException {
         ticketValidation(ticketId);
-        Trip trip = tripDAO.findTripByTicketId(ticketId);
-
-        return  "From: " + trip.getPlace_from() + " " +
-                "To: "   + trip.getPlace_to() + " " +
-                "Departure date: " + trip.getDeparture_date().toString() +
-                "Cost: " + trip.getCost().toString() +
-                "Payment status:" + ticketDAO.findStatusByTicketId(ticketId);
+        return  tripDAO.findTripAndStatusByTicketId(ticketId);
     }
 
     private void ticketValidation(Long id) throws NotFoundException {

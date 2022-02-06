@@ -21,6 +21,50 @@ import javax.servlet.http.HttpSession;
 public class PaymentController {
     private final PaymentService paymentService;
 
+    /*
+    Сервис оплаты. Сервис оплаты на вход принимает
+        - ФИО клиента,
+        - сумма
+    На выходе возвращает уникальный идентификатор платежа.
+     */
+
+    @PostMapping(value = "/addPaymentPersonAndPrice")
+    public ResponseEntity addPaymentPersonAndPrice(HttpSession session,
+                                                   @RequestParam String firstName,
+                                                   @RequestParam String lastName,
+                                                   @RequestParam String cost) {
+        try {
+            Utils.loginValidation(session);
+
+            Long paymentId = paymentService.addPaymentsByPersonAndCost(firstName, lastName, Utils.stringToLong(cost));
+            log.info("Add payment with id: " + paymentId);
+            return new ResponseEntity<>("Payment with id: " + paymentId + "was saved", HttpStatus.OK);
+        } catch (DaoException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /*
+    Сервис получения статуса платежа. Сервис получения статусов на вход принимает
+        - уникальный идентификатор платежа
+    На выходе случайным образом отдает 1 из статусов
+        - NE
+        - FAILED
+        - DONE
+     */
+    @GetMapping(path = "/findStatusByPaymentId/{paymentId}")
+    public ResponseEntity<String> getTicketStatusByPaymentId(HttpSession session, @RequestParam String paymentId) {
+        try {
+            Utils.loginValidation(session);
+
+            log.info("Get status with payment id: " + paymentId);
+            return ResponseEntity.ok(paymentService.
+                    findTicketStatusByPaymentId(Utils.stringToLong(paymentId)));
+        } catch (DaoException | NotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping(path = "/findById/{paymentId}")
     public ResponseEntity getPayment(HttpSession session, @RequestParam String paymentId) {
         try {
@@ -68,49 +112,6 @@ public class PaymentController {
             log.info("Update payment with id: " + updatePayment.getId());
             return new ResponseEntity<>("Payment was updated", HttpStatus.OK);
         } catch (DaoException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    /*
-    Сервис оплаты. Сервис оплаты на вход принимает
-        - ФИО клиента,
-        - сумма
-    На выходе возвращает уникальный идентификатор платежа.
-     */
-    @GetMapping(path = "/findStatus")
-    public ResponseEntity getPaymentId(HttpSession session,
-                                                   @RequestParam String firstName,
-                                                   @RequestParam String lastName,
-                                                   @RequestParam String cost) {
-        //TODO
-        try {
-            Utils.loginValidation(session);
-
-            Long paymentId =  paymentService.getPaymentIdWithFilter(firstName, lastName, Utils.stringToLong(cost));
-            log.info("We found payment id: " + paymentId);
-            return ResponseEntity.ok(paymentId);
-        } catch (DaoException | NotFoundException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    /*
-    Сервис получения статуса платежа. Сервис получения статусов на вход принимает
-        - уникальный идентификатор платежа
-    На выходе случайным образом отдает 1 из статусов
-        - NEW
-        - FAILED
-        - DONE
-     */
-    @GetMapping(path = "/findStatusByPaymentId/{paymentId}")
-    public ResponseEntity<String> getTicketStatusByPaymentId(HttpSession session, @RequestParam String paymentId) {
-        try {
-            Utils.loginValidation(session);
-
-            log.info("Get status with payment id: " + paymentId);
-            return ResponseEntity.ok(paymentService.findTicketStatusByPaymentId(Utils.stringToLong(paymentId)));
-        } catch (DaoException | NotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

@@ -1,7 +1,6 @@
 package com.example.salestickets.controller;
 
 import com.example.salestickets.exceptions.DaoException;
-import com.example.salestickets.model.Ticket;
 import com.example.salestickets.model.Trip;
 import com.example.salestickets.service.TripService;
 import com.example.salestickets.util.Utils;
@@ -23,8 +22,49 @@ import java.util.List;
 public class TripController {
     private final TripService tripService;
 
+    /*
+       Список рейсов:
+        - Идентификатор
+        - Откуда
+        - Куда
+        - Время отправления
+        - Стоимость
+        - Количество доступных билетов
+    */
+    @GetMapping(path = "/getTripsList")
+    public ResponseEntity<List<Trip>> getTripsList(HttpSession session) {
+        try {
+            Utils.loginAndAdminValidation(session);
+
+            log.info("Get all trips with free seats");
+            List<Trip> tripList =  tripService.getTripsListWithDateAndQuantity();
+            return new ResponseEntity<>(tripList, HttpStatus.OK);
+        } catch (DaoException e) {
+            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /*
+    Дополнительно необходимо реализовать обработчик по расписанию,
+     который будет проверять состояние всех билетов, у которых состояние платежа NEW.
+    Если получаем статус FAIL, возвращаем количество доступных билетов на рейсе и больше не опрашиваем статус.
+    Если получаем DONE, то ничего не делаем и больше не опрашиваем статус.
+     */
+    @GetMapping(path = "/getInfoByTripId")
+    public ResponseEntity<String> getInfoByTripId(HttpSession session, @RequestParam Long tripId) {
+        try {
+            Utils.loginAndAdminValidation(session);
+
+            log.info("Get info with tripId: " + tripId);
+            tripService.getInfoByTripId(tripId);
+            return new ResponseEntity<>("Get info with tripId: " + tripId, HttpStatus.OK);
+        } catch (DaoException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @GetMapping(path = "/findById/{tripId}")
-    public ResponseEntity getPayment(HttpSession session, @RequestParam String tripId) {
+    public ResponseEntity getTrip(HttpSession session, @RequestParam String tripId) {
         try {
             Utils.loginAndAdminValidation(session);
 
@@ -36,7 +76,7 @@ public class TripController {
     }
 
     @PostMapping(value = "/add")
-    public ResponseEntity addPayment(HttpSession session, @RequestBody Trip trip) {
+    public ResponseEntity addTrip(HttpSession session, @RequestBody Trip trip) {
         try {
             Utils.loginAndAdminValidation(session);
 
@@ -69,46 +109,6 @@ public class TripController {
             Trip updateTrip = tripService.update(trip);
             log.info("Update trip with id: " + updateTrip.getId());
             return new ResponseEntity<>("Trip was updated", HttpStatus.OK);
-        } catch (DaoException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /*
-       Список рейсов:
-        - Идентификатор
-        - Откуда
-        - Куда
-        - Время отправления
-        - Стоимость
-        - Количество доступных билетов
-  */
-    @GetMapping(path = "/getTripsList")
-    public ResponseEntity<List<Trip>> getTripsList(HttpSession session) {
-        try {
-            Utils.loginAndAdminValidation(session);
-
-            log.info("Get all trips with free seats");
-            List<Trip> tripList =  tripService.getTripsListWithDateAndQuantity();
-            return new ResponseEntity<>(tripList, HttpStatus.OK);
-        } catch (DaoException e) {
-            return new ResponseEntity<>(Collections.emptyList(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    /*
-    Дополнительно необходимо реализовать обработчик по расписанию, который будет проверять состояние всех билетов, у которых состояние платежа NEW.
-    Если получаем статус FAIL, возвращаем количество доступных билетов на рейсе и больше не опрашиваем статус.
-    Если получаем DONE, то ничего не делаем и больше не опрашиваем статус.
-     */
-    @GetMapping(path = "/getInfoByTripId")
-    public ResponseEntity<String> getInfoByTripId(HttpSession session, @RequestParam Long tripId) {
-        try {
-            Utils.loginAndAdminValidation(session);
-
-            log.info("Get info with tripId: " + tripId);
-            tripService.getInfoByTripId(tripId);
-            return new ResponseEntity<>("Get condition", HttpStatus.OK);
         } catch (DaoException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

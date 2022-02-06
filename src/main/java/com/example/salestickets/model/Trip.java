@@ -6,7 +6,6 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Date;
@@ -45,20 +44,9 @@ public class Trip {
     private Date departure_date;
 
     @NotEmpty(message = "Cost should not be empty")
-    @Min(value = 0, message = "Cost should be greater than 0")
     @Column(name = "COST", nullable = false)
     private Long cost;
 
     @Column(name = "QUANTITY", nullable = false)
     private Long quantity;
 }
-
-/*
-                       id numeric,
-                       CONSTRAINT trip_pk PRIMARY KEY (id),
-                       place_from varchar(50) not null,
-                       place_to varchar(50) not null,
-                       departure_date TIMESTAMP,
-                       cost numeric not null,
-                       quantity numeric
- */

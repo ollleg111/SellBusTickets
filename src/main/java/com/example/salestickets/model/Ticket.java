@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity(name = "tickets")
 @Table(name = "TICKETS")
@@ -28,22 +29,14 @@ public class Ticket {
     @JoinColumn(name = "TRIP_ID")
     private Trip trip;
 
-    @OneToOne
-    @JoinColumn(name = "PAYMENT_ID")
-    private Payment payment;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "payments_tickets",
+            joinColumns = @JoinColumn(name = "ticket_id"),
+            inverseJoinColumns = @JoinColumn(name = "payment_id"))
+    private List<Ticket> ticketList;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TICKET_STATUS")
     private TicketStatus ticketStatus;
 }
 
-/*
-                         id numeric,
-                         CONSTRAINT ticket_pk PRIMARY KEY (id),
-                         trip_id numeric NOT NULL,
-                         CONSTRAINT TRIP_FK FOREIGN KEY (TRIP_ID) REFERENCES TRIPS(ID),
-                         payment_id numeric NOT NULL,
-                         CONSTRAINT PAYMENT_FK FOREIGN KEY (PAYMENT_ID) REFERENCES PAYMENTS(ID),
-                         ticket_status varchar (6),
-                         check(ticket_status IN('NEW','FAILED','DONE'))
- */

@@ -40,12 +40,11 @@ public class PaymentService {
         return paymentDAO.findTicketStatusByPaymentId(id);
     }
 
-    //TODO
-    public Long getPaymentIdWithFilter(String firstName, String lastName, Long cost) throws
+    public Long addPaymentsByPersonAndCost(String firstName, String lastName, Long cost) throws
             DaoException, NotFoundException {
-        return paymentDAO.getPaymentIdWithFilter(
-                userService.findUserIdByFirstAndLastName(firstName, lastName),
-                cost);
+        Long userId = userService.findUserIdByFirstAndLastName(firstName, lastName);
+        Payment payment = findById(paymentDAO.addPaymentsByUserIdAndCost(userId, cost));
+        return payment.getId();
     }
 
     private void paymentValidation(Long id) throws NotFoundException {
