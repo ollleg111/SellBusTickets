@@ -24,6 +24,15 @@ public class TicketDAO extends GeneralDAO<Ticket>{
     private final String ADD_TICKET_WITH_TRIP_ID_AND_STATUS =
             "INSERT INTO TICKETS (TRIP_ID, TICKET_STATUS) VALUES (?, 'NEW')";
 
+
+    //TEST OK
+    private final String GET_TICKET_ID_BY_PAYMENT_ID =
+            "SELECT TICKETS.ID FROM TICKETS WHERE TICKETS.TRIP_ID = " +
+                    "(SELECT TRIPS.ID FROM PAYMENTS INNER JOIN TRIPS ON " +
+                    "PAYMENTS.TRIP_ID = TRIPS.ID WHERE PAYMENTS.ID = ?)";
+
+
+
     private String alarmMessage = TicketDAO.class.getName();
 
     /*
@@ -51,15 +60,26 @@ public class TicketDAO extends GeneralDAO<Ticket>{
     }
 
     @Transactional
-    public Ticket addTicketWithTripIdAndStatus(Long tripsId) throws DaoException {
+    public void addTicketWithTripIdAndStatus(Long tripsId) throws DaoException {
         try {
             Query query = entityManager.createNativeQuery(ADD_TICKET_WITH_TRIP_ID_AND_STATUS);
             query.setParameter(1, tripsId);
-
-            return (Ticket) query.getSingleResult();
+            query.executeUpdate();
         } catch (DaoException e) {
             throw new HibernateException("Operation with ticket data was filed in method" +
                     " addTicketWithTripIdAndStatus(Long tripsId) from class " + alarmMessage);
+        }
+    }
+
+    public Long getTicketIdWithPersonAndTripId(Long paymentId) throws DaoException {
+        try {
+            Query query = entityManager.createNativeQuery(GET_TICKET_ID_BY_PAYMENT_ID);
+            query.setParameter(1, paymentId);
+
+            return (Long) query.getSingleResult();
+        } catch (DaoException e) {
+            throw new HibernateException("Operation with ticket data was filed in method" +
+                    " getTicketIdWithPersonAndTripId(Long userId, Long tripId) from class " + alarmMessage);
         }
     }
 }

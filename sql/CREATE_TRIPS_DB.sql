@@ -7,6 +7,6 @@ CREATE TABLE trips (
                        place_from varchar(50) NOT NULL,
                        place_to varchar(50) NOT NULL,
                        departure_date TIMESTAMP,
-                       cost numeric NOT NULL,
+                       cost numeric NOT NULL UNIQUE,
                        quantity numeric
 );

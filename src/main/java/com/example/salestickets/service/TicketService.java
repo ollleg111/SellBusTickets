@@ -57,20 +57,20 @@ public class TicketService {
             throws DaoException, NotFoundException {
         Long userId = userService.findUserIdByFirstAndLastName(firstName, lastName);
         tripService.quantityTripsValidation(tripId);
-        Ticket ticket;
         try {
             //При заказе билета необходимо сохранить билет в базу
-            ticket = ticketDAO.addTicketWithTripIdAndStatus(tripId);
+            ticketDAO.addTicketWithTripIdAndStatus(tripId);
             //вычесть билет из количества доступных билетов на рейсе
             tripDAO.updateQuantity();
             //создать платеж в платежной системе
-            paymentDAO.addPaymentsByUserIdAndTripId(userId, tripId);
+            paymentDAO.addPaymentByUserIdAndTripId(userId, tripId);
         } catch (ServiceException e ) {
             throw new ServiceException("Operation was filed in method" +
                     " buyTicketWithPersonAndTripId(String firstName, String lastName, Long tripId) from class "
                     + TicketService.class.getName());
         }
-        return ticket.getId();
+        Long paymentId = paymentDAO.getPaymentIdByUserIdAndTripId(tripId, userId);
+        return ticketDAO.getTicketIdWithPersonAndTripId(paymentId);
     }
 
     public String findTripAndStatusByTicketId(Long ticketId) throws DaoException, NotFoundException {

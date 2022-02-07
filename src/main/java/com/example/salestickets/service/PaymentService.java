@@ -1,6 +1,7 @@
 package com.example.salestickets.service;
 
 import com.example.salestickets.dao.PaymentDAO;
+import com.example.salestickets.dao.TripDAO;
 import com.example.salestickets.exceptions.DaoException;
 import com.example.salestickets.exceptions.NotFoundException;
 import com.example.salestickets.model.Payment;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class PaymentService {
     private final PaymentDAO paymentDAO;
     private UserService userService;
+    private TripDAO tripDAO;
 
     public Payment findById(Long id) throws DaoException, NotFoundException {
         paymentValidation(id);
@@ -43,8 +45,9 @@ public class PaymentService {
     public Long addPaymentsByPersonAndCost(String firstName, String lastName, Long cost) throws
             DaoException, NotFoundException {
         Long userId = userService.findUserIdByFirstAndLastName(firstName, lastName);
-        Payment payment = findById(paymentDAO.addPaymentsByUserIdAndCost(userId, cost));
-        return payment.getId();
+        paymentDAO.addPaymentsByUserIdAndCost(userId, cost);
+
+        return paymentDAO.getPaymentIdByUserIdAndTripId(tripDAO.getTripIdByTripCost(cost), userId);
     }
 
     private void paymentValidation(Long id) throws NotFoundException {

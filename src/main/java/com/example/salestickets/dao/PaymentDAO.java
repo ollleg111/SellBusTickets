@@ -36,6 +36,13 @@ public class PaymentDAO extends GeneralDAO<Payment>{
                     " (SELECT TRIPS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID " +
                     "WHERE PAYMENTS.ID = ?)";
 
+    //TEST OK
+    private final String GET_PAYMENT_ID_BY_TRIP_ID_AND_USER_ID =
+            "SELECT PAYMENTS.ID FROM PAYMENTS " +
+                    "INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID " +
+                    "INNER JOIN USERS ON PAYMENTS.USER_ID = USERS.ID " +
+                    "WHERE TRIPS.ID = ? AND USERS.ID = ?";
+
     private final String alarmMessage = PaymentDAO.class.getName();
 
     /*
@@ -73,13 +80,12 @@ public class PaymentDAO extends GeneralDAO<Payment>{
         }
     }
 
-    public Long addPaymentsByUserIdAndCost(Long userId, Long cost) throws DaoException {
+    public void addPaymentsByUserIdAndCost(Long userId, Long cost) throws DaoException {
         try {
             Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_COST);
             query.setParameter(1, userId);
             query.setParameter(2, cost);
-
-            return (Long) query.getSingleResult();
+            query.executeUpdate();
         } catch (DaoException e) {
             throw new HibernateException("Operation with user data was filed in method" +
                     " addPaymentsByUserIdAndCost(Long userId, Long cost) from class " + alarmMessage);
@@ -87,16 +93,27 @@ public class PaymentDAO extends GeneralDAO<Payment>{
     }
 
     @Transactional
-    public Payment addPaymentsByUserIdAndTripId(Long userId, Long tripId) throws DaoException {
+    public void addPaymentByUserIdAndTripId(Long userId, Long tripId) throws DaoException {
         try {
             Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID);
             query.setParameter(1, userId);
             query.setParameter(2, tripId);
-
-            return (Payment) query.getSingleResult();
+            query.executeUpdate();
         } catch (DaoException e) {
             throw new HibernateException("Operation with user data was filed in method" +
-                    " addPaymentsByUserIdAndTripId(Long userId, Long cost) from class " + alarmMessage);
+                    " addPaymentByUserIdAndTripId(Long userId, Long cost) from class " + alarmMessage);
+        }
+    }
+
+    public Long getPaymentIdByUserIdAndTripId(Long tripId, Long userId) throws DaoException {
+        try {
+            Query query = entityManager.createNativeQuery(GET_PAYMENT_ID_BY_TRIP_ID_AND_USER_ID);
+            query.setParameter(1, tripId);
+            query.setParameter(2, userId);
+            return (Long) query.getSingleResult();
+        } catch (DaoException e) {
+            throw new HibernateException("Operation with user data was filed in method" +
+                    " getPaymentIdByUserIdAndTripId(Long tripId, Long userId) from class " + alarmMessage);
         }
     }
 }

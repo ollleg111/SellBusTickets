@@ -40,6 +40,9 @@ public class TripDAO extends GeneralDAO<Trip> {
     //TEST OK
     private final String QUANTITY_TICKETS_IN_THE_TRIP_WHERE_STATUS_FAIL =
             "SELECT QUANTITY FROM TRIPS WHERE TRIPS.ID = ?";
+
+    //TEST OK
+    private final String GET_TRIP_ID_BY_COST = "SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?";
     /*
     CRUD
      */
@@ -119,6 +122,18 @@ public class TripDAO extends GeneralDAO<Trip> {
         } catch (DaoException e) {
             throw new HibernateException("Operation with ticket data was filed in method" +
                     " findQuantityTicketsWhereStatusFail(Long ticketId) from class " + alarmMessage);
+        }
+    }
+
+    public Long getTripIdByTripCost(Long cost) throws DaoException {
+        try {
+            Query query = entityManager.createNativeQuery(GET_TRIP_ID_BY_COST);
+            query.setParameter(1, cost);
+
+            return (Long) query.getSingleResult();
+        } catch (DaoException e) {
+            throw new HibernateException("Operation with ticket data was filed in method" +
+                    " getTripIdByTripCost(LLong cost) from class " + alarmMessage);
         }
     }
 }
