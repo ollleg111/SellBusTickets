@@ -21,12 +21,6 @@ public class PaymentDAO extends GeneralDAO<Payment>{
     }
 
     //TEST OK
-    private final String FIND_PAYMENT_ID_WITH_USER_ID_AND_COST =
-            "SELECT PAYMENTS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID WHERE USER_ID = ? " +
-                    "AND TRIPS.COST = ?";
-
-
-    //TEST OK
     private final String ADD_PAYMENT_BY_USER_ID_AND_COST =
             "INSERT INTO PAYMENTS (USER_ID, TRIP_ID) " +
                     "values (USER_ID = ?, (SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?))";
