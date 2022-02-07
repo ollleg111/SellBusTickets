@@ -21,7 +21,7 @@ public class TicketDAO extends GeneralDAO<Ticket>{
     }
 
     //TEST OK
-    private final String ADD_TICKET_WITH_USER_ID_AND_TRIPS_ID =
+    private final String ADD_TICKET_WITH_TRIP_ID_AND_STATUS =
             "INSERT INTO TICKETS (TRIP_ID, TICKET_STATUS) VALUES (?, 'NEW')";
 
     private String alarmMessage = TicketDAO.class.getName();
@@ -53,13 +53,13 @@ public class TicketDAO extends GeneralDAO<Ticket>{
     @Transactional
     public Ticket addTicketWithTripIdAndStatus(Long tripsId) throws DaoException {
         try {
-            Query query = entityManager.createNativeQuery(ADD_TICKET_WITH_USER_ID_AND_TRIPS_ID);
+            Query query = entityManager.createNativeQuery(ADD_TICKET_WITH_TRIP_ID_AND_STATUS);
             query.setParameter(1, tripsId);
 
             return (Ticket) query.getSingleResult();
         } catch (DaoException e) {
             throw new HibernateException("Operation with ticket data was filed in method" +
-                    " addTicketWithPersonIdAndTripId(Long userId) from class " + alarmMessage);
+                    " addTicketWithTripIdAndStatus(Long tripsId) from class " + alarmMessage);
         }
     }
 }
