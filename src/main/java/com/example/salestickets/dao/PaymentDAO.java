@@ -82,7 +82,7 @@ public class PaymentDAO extends GeneralDAO<Payment>{
             return (Long) query.getSingleResult();
         } catch (DaoException e) {
             throw new HibernateException("Operation with user data was filed in method" +
-                    " addPaymentsByPerson(Long userId, Long cost) from class " + alarmMessage);
+                    " addPaymentsByUserIdAndCost(Long userId, Long cost) from class " + alarmMessage);
         }
     }
 

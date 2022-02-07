@@ -105,7 +105,7 @@ public class TripDAO extends GeneralDAO<Trip> {
 
             return (boolean) query.getSingleResult();
         } catch (DaoException e) {
-            throw new HibernateException("Operation filed in method VALIDATION_NEW_STATUS()" +
+            throw new HibernateException("Operation filed in method validationStatus()" +
                     " from class" + alarmMessage);
         }
     }
