@@ -21,14 +21,8 @@ public class TicketDAO extends GeneralDAO<Ticket>{
     }
 
     //TEST OK
-    private final String FIND_TICKET_STATUS_BY_TICKET_ID = "SELECT TICKET_STATUS FROM TICKETS WHERE ID = ?";
-
-    //TEST OK
     private final String ADD_TICKET_WITH_USER_ID_AND_TRIPS_ID =
             "INSERT INTO TICKETS (TRIP_ID, TICKET_STATUS) VALUES (?, 'NEW')";
-    //TEST OK
-    private final String GET_ALL_TICKETS_WITH_TICKET_STATUS_NEW =
-            "SELECT * FROM TICKETS WHERE TICKET_STATUS = 'NEW'";
 
     private String alarmMessage = TicketDAO.class.getName();
 
