@@ -47,7 +47,9 @@ public class UserService {
     }
 
     public Long findUserIdByFirstAndLastName(String firstName, String lastName) throws ServiceException {
-        return userDAO.findUserIdByFirstAndLastName(firstName, lastName);
+        Long userId = userDAO.findUserIdByFirstAndLastName(firstName, lastName);
+        userValidation(userId);
+        return userId;
     }
 
     private void userValidation(Long id) throws NotFoundException {
