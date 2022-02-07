@@ -57,7 +57,7 @@ public class TicketService {
         Long userId = userService.findUserIdByFirstAndLastName(firstName, lastName);
 
         //При заказе билета необходимо сохранить билет в базу
-        Ticket ticket = ticketDAO.addTicketWithPersonIdAndTripId(userId, tripId);
+        Ticket ticket = ticketDAO.addTicketWithTripIdAndStatus(tripId);
         tripService.quantityTripsValidation(ticket.getTrip().getQuantity(), tripId);
 
         //вычесть билет из количества доступных билетов на рейсе

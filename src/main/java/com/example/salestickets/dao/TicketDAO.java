@@ -51,10 +51,10 @@ public class TicketDAO extends GeneralDAO<Ticket>{
     }
 
     @Transactional
-    public Ticket addTicketWithPersonIdAndTripId(Long userId, Long tripsId) throws DaoException {
+    public Ticket addTicketWithTripIdAndStatus(Long tripsId) throws DaoException {
         try {
             Query query = entityManager.createNativeQuery(ADD_TICKET_WITH_USER_ID_AND_TRIPS_ID);
-            query.setParameter(1, userId);
+            query.setParameter(1, tripsId);
 
             return (Ticket) query.getSingleResult();
         } catch (DaoException e) {
