@@ -44,7 +44,6 @@ public class TripService {
 
     public String getInfoByTripId(Long tripId) throws DaoException, NotFoundException {
         tripValidation(tripId);
-
         if(!tripDAO.validationStatus(tripId, TicketStatus.NEW)) {
             if(tripDAO.validationStatus(tripId, TicketStatus.FAILED)) {
                 return tripDAO.findQuantityTicketsWhenStatusFail(tripId).toString();
@@ -53,11 +52,11 @@ public class TripService {
         return "DONE";
     }
 
-    public void quantityTripsValidation(Long quantity, Long tripId) throws DaoException, NotFoundException {
+    public void quantityTripsValidation(Long tripId) throws DaoException, NotFoundException {
         tripValidation(tripId);
-        if (tripDAO.findById(tripId).getQuantity() >= quantity) throw
+        if(tripDAO.findById(tripId).getQuantity() > 0) throw
                 new NotFoundException("Trip does not exist in method" +
-                " quantityTripsValidation(Long quantity, Long tripId) " + alarmMessage);
+                        " quantityTripsValidation(Long tripId) " + alarmMessage);
     }
 
     private void tripValidation(Long tripId) throws NotFoundException {

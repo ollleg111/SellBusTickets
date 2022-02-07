@@ -5,6 +5,7 @@ import com.example.salestickets.dao.TicketDAO;
 import com.example.salestickets.dao.TripDAO;
 import com.example.salestickets.exceptions.DaoException;
 import com.example.salestickets.exceptions.NotFoundException;
+import com.example.salestickets.exceptions.ServiceException;
 import com.example.salestickets.model.Ticket;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -55,16 +56,20 @@ public class TicketService {
     public Long buyTicketWithPersonAndTripId(String firstName, String lastName, Long tripId)
             throws DaoException, NotFoundException {
         Long userId = userService.findUserIdByFirstAndLastName(firstName, lastName);
-
-        //При заказе билета необходимо сохранить билет в базу
-        Ticket ticket = ticketDAO.addTicketWithTripIdAndStatus(tripId);
-        tripService.quantityTripsValidation(ticket.getTrip().getQuantity(), tripId);
-
-        //вычесть билет из количества доступных билетов на рейсе
-        tripDAO.updateQuantity();
-
-        //создать платеж в платежной системе
-        paymentDAO.addPaymentsByUserIdAndTripId(userId, tripId);
+        tripService.quantityTripsValidation(tripId);
+        Ticket ticket;
+        try {
+            //При заказе билета необходимо сохранить билет в базу
+            ticket = ticketDAO.addTicketWithTripIdAndStatus(tripId);
+            //вычесть билет из количества доступных билетов на рейсе
+            tripDAO.updateQuantity();
+            //создать платеж в платежной системе
+            paymentDAO.addPaymentsByUserIdAndTripId(userId, tripId);
+        } catch (ServiceException e ) {
+            throw new ServiceException("Operation was filed in method" +
+                    " buyTicketWithPersonAndTripId(String firstName, String lastName, Long tripId) from class "
+                    + TicketService.class.getName());
+        }
         return ticket.getId();
     }
 
