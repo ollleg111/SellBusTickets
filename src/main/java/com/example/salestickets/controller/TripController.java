@@ -34,7 +34,7 @@ public class TripController {
     @GetMapping(path = "/getTripsList")
     public ResponseEntity<List<Trip>> getTripsList(HttpSession session) {
         try {
-            Utils.loginAndAdminValidation(session);
+            Utils.loginValidation(session);
 
             log.info("Get all trips with free seats");
             List<Trip> tripList =  tripService.getTripsListWithDateAndQuantity();
