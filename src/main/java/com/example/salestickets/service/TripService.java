@@ -54,7 +54,7 @@ public class TripService {
 
     public void quantityTripsValidation(Long tripId) throws DaoException, NotFoundException {
         tripValidation(tripId);
-        if(tripDAO.findById(tripId).getQuantity() > 0) throw
+        if(tripDAO.findById(tripId).getQuantity() == 0) throw
                 new NotFoundException("Trip does not exist in method" +
                         " quantityTripsValidation(Long tripId) " + alarmMessage);
     }
