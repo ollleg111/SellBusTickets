@@ -46,7 +46,7 @@ public class TripService {
         tripValidation(tripId);
         if(!tripDAO.validationStatus(tripId, TicketStatus.NEW)) {
             if(tripDAO.validationStatus(tripId, TicketStatus.FAILED)) {
-                return tripDAO.findQuantityTicketsWhenStatusFail(tripId).toString();
+                return tripDAO.findQuantityTicketsWhereStatusFail(tripId).toString();
             }
         }
         return "DONE";

@@ -38,7 +38,7 @@ public class TripDAO extends GeneralDAO<Trip> {
     private final String VALIDATION_NEW_STATUS =
             "SELECT TICKET_STATUS FROM TICKETS WHERE TRIP_ID = ? AND TICKET_STATUS = ?";
     //TEST OK
-    private final String QUANTITY_TICKETS_IN_THE_TRIP_WHEN_STATUS_FAIL =
+    private final String QUANTITY_TICKETS_IN_THE_TRIP_WHERE_STATUS_FAIL =
             "SELECT QUANTITY FROM TRIPS WHERE TRIPS.ID = ?";
     /*
     CRUD
@@ -110,15 +110,15 @@ public class TripDAO extends GeneralDAO<Trip> {
         }
     }
 
-    public Long findQuantityTicketsWhenStatusFail(Long tripId) throws DaoException {
+    public Long findQuantityTicketsWhereStatusFail(Long tripId) throws DaoException {
         try {
-            Query query = entityManager.createNativeQuery(QUANTITY_TICKETS_IN_THE_TRIP_WHEN_STATUS_FAIL);
+            Query query = entityManager.createNativeQuery(QUANTITY_TICKETS_IN_THE_TRIP_WHERE_STATUS_FAIL);
             query.setParameter(1, tripId);
 
             return (Long) query.getSingleResult();
         } catch (DaoException e) {
             throw new HibernateException("Operation with ticket data was filed in method" +
-                    " findQuantityTicketsWhenStatusFail(Long ticketId) from class " + alarmMessage);
+                    " findQuantityTicketsWhereStatusFail(Long ticketId) from class " + alarmMessage);
         }
     }
 }
