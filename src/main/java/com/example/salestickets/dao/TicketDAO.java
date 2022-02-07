@@ -24,14 +24,11 @@ public class TicketDAO extends GeneralDAO<Ticket>{
     private final String ADD_TICKET_WITH_TRIP_ID_AND_STATUS =
             "INSERT INTO TICKETS (TRIP_ID, TICKET_STATUS) VALUES (?, 'NEW')";
 
-
     //TEST OK
     private final String GET_TICKET_ID_BY_PAYMENT_ID =
             "SELECT TICKETS.ID FROM TICKETS WHERE TICKETS.TRIP_ID = " +
                     "(SELECT TRIPS.ID FROM PAYMENTS INNER JOIN TRIPS ON " +
                     "PAYMENTS.TRIP_ID = TRIPS.ID WHERE PAYMENTS.ID = ?)";
-
-
 
     private String alarmMessage = TicketDAO.class.getName();
 

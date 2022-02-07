@@ -75,7 +75,7 @@ public class TicketService {
 
     public String findTripAndStatusByTicketId(Long ticketId) throws DaoException, NotFoundException {
         ticketValidation(ticketId);
-        return  tripDAO.findTripAndStatusByTicketId(ticketId);
+        return tripDAO.findTripAndStatusByTicketId(ticketId);
     }
 
     private void ticketValidation(Long id) throws NotFoundException {
