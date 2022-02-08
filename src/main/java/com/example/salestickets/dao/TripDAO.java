@@ -48,7 +48,7 @@ public class TripDAO extends GeneralDAO<Trip> {
             "SELECT TRIPS.ID FROM TRIPS INNER JOIN " +
                     "PAYMENTS ON TRIPS.PAYMENT_ID = PAYMENTS.ID INNER JOIN " +
                     "USERS ON TRIPS.USER_ID = USERS.ID " +
-                    "WHERE TRIPS.COST = ? AND USERS.ID = ? AND PAYMENTS.PAYMENT_TIME = (SELECT current_time)";
+                    "WHERE TRIPS.COST = ? AND USERS.ID = ? AND PAYMENTS.PAYMENT_TIME = (SELECT current_date)";
     /*
     CRUD
      */

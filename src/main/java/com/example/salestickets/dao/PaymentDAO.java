@@ -25,12 +25,12 @@ public class PaymentDAO extends GeneralDAO<Payment>{
             "INSERT INTO PAYMENTS (USER_ID, TRIP_ID, PAYMENT_TIME) values (" +
                     "USER_ID = ?," +
                     "(SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?)," +
-                    "PAYMENT_TIME = (SELECT current_time))";
+                    "PAYMENT_TIME = (SELECT current_date))";
 
     //TEST OK
     private final String ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID_AND_PAYMENT_TIME =
             "INSERT INTO PAYMENTS (USER_ID, TRIP_ID, PAYMENT_TIME) " +
-                    "values (USER_ID = ?, TRIPS.ID = ?, PAYMENT_TIME = (SELECT current_time))";
+                    "values (USER_ID = ?, TRIPS.ID = ?, PAYMENT_TIME = (SELECT current_date))";
 
     //TEST OK
     private final String FIND_TICKET_STATUS_BY_PAYMENT_ID =
@@ -43,7 +43,7 @@ public class PaymentDAO extends GeneralDAO<Payment>{
             "SELECT PAYMENTS.ID FROM PAYMENTS " +
                     "INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID " +
                     "INNER JOIN USERS ON PAYMENTS.USER_ID = USERS.ID " +
-                    "WHERE TRIPS.ID = ? AND USERS.ID = ? AND PAYMENT_TIME = (SELECT current_time)";
+                    "WHERE TRIPS.ID = ? AND USERS.ID = ? AND PAYMENT_TIME = (SELECT current_date)";
 
     private final String alarmMessage = PaymentDAO.class.getName();
 
