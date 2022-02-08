@@ -41,7 +41,7 @@ public class PaymentDAO extends GeneralDAO<Payment>{
             "SELECT PAYMENTS.ID FROM PAYMENTS " +
                     "INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID " +
                     "INNER JOIN USERS ON PAYMENTS.USER_ID = USERS.ID " +
-                    "WHERE TRIPS.ID = ? AND USERS.ID = ?";
+                    "WHERE TRIPS.ID = ? AND USERS.ID = ? AND TRIPS.DEPARTURE_DATE = current_date";
 
     private final String alarmMessage = PaymentDAO.class.getName();
 

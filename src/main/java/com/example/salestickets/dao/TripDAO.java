@@ -43,7 +43,8 @@ public class TripDAO extends GeneralDAO<Trip> {
             "SELECT QUANTITY FROM TRIPS WHERE TRIPS.ID = ?";
 
     //TEST OK
-    private final String GET_TRIP_ID_BY_COST = "SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?";
+    private final String GET_TRIP_ID_BY_COST = "SELECT TRIPS.ID FROM TRIPS WHERE " +
+            "TRIPS.COST = ? AND TRIPS.DEPARTURE_DATE = current_date";
     /*
     CRUD
      */
