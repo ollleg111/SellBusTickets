@@ -1,8 +1,6 @@
 package com.example.salestickets.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -14,6 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Payment {
     @Id
     @SequenceGenerator(

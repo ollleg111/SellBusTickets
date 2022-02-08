@@ -1,13 +1,14 @@
 package com.example.salestickets.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+
+@NoArgsConstructor
+@AllArgsConstructor
 
 @Entity(name = "users")
 @Table(name = "USERS")
@@ -59,4 +60,13 @@ public class User {
 
     @OneToOne(cascade = CascadeType.REMOVE)
     private Payment payment;
+
+    public User(String firstName, String lastName, String phoneNumber, String mail, String password, UserStatus userStatus) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.mail = mail;
+        this.password = password;
+        this.userStatus = userStatus;
+    }
 }

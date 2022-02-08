@@ -98,9 +98,9 @@ insert into USERS (id, first_name, last_name, phone_number, e_mail, password, us
 insert into USERS (id, first_name, last_name, phone_number, e_mail, password, user_status) values (2, 'Taryn', 'Ramalho', '267-278-7268', 'tramalho1@google.it', '9ddHnRusSS', 'USER');
 insert into USERS (id, first_name, last_name, phone_number, e_mail, password, user_status) values (3, 'Rubetta', 'Kares', '749-883-1389', 'rkares2@storify.com', '64n7VSRF', 'USER');
 
-insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (1, 'Yanjiang', 'Armopa', '2022-05-04 20:00:00', 94, 35);
-insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (2, 'Alicia', 'Usevia', '2022-04-04 20:00:00', 5, 39);
-insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (3, 'Cristalina', 'Myski', '2022-06-04 20:00:00', 14, 15);
+insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (1, 'Yanjiang', 'Armopa', '2022-05-04', 94, 35);
+insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (2, 'Alicia', 'Usevia', '2022-04-04', 5, 39);
+insert into TRIPS (id, place_from, place_to, departure_date, cost, quantity) values (3, 'Cristalina', 'Myski', '2022-06-04', 14, 15);
 
 insert into TICKETS (id, trip_id, ticket_status) values (1, 1, 'NEW');
 insert into TICKETS (id, trip_id, ticket_status) values (2, 2, 'FAILED');
