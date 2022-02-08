@@ -3,7 +3,10 @@ package com.example.salestickets.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "payments")
@@ -28,6 +31,13 @@ public class Payment {
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User user;
+
+    //TODO добавить поле через Date payment_date = new Date()
+    /*
+    @DateTimeFormat
+    @Column(name = "PAYMENT_DATE")
+    private Date payment_date;
+     */
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "payments_tickets",

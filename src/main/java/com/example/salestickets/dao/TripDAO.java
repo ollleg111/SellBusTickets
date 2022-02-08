@@ -44,8 +44,11 @@ public class TripDAO extends GeneralDAO<Trip> {
             "SELECT QUANTITY FROM TRIPS WHERE TRIPS.ID = ?";
 
     //TEST OK
-    private final String GET_TRIP_ID_BY_COST = "SELECT TRIPS.ID FROM TRIPS WHERE " +
-            "TRIPS.COST = ? AND TRIPS.DEPARTURE_DATE = (SELECT current_date)";
+    private final String GET_TRIP_ID_BY_COST = "SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?";
+
+    //TODO
+    private final String GET_TRIP_ID_BY_COST_AND_PAYMENT_DATE =
+            "SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?";
     /*
     CRUD
      */
@@ -128,6 +131,10 @@ public class TripDAO extends GeneralDAO<Trip> {
         }
     }
 
+    //TODO
+    /*
+    по цене и дате пеймента
+     */
     public Long getTripIdByTripCost(Long cost) throws DaoException {
         try {
             Query query = entityManager.createNativeQuery(GET_TRIP_ID_BY_COST);
