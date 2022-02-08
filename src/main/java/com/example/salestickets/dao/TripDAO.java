@@ -45,10 +45,10 @@ public class TripDAO extends GeneralDAO<Trip> {
 
     //TEST OK
     private final String GET_TRIP_ID_BY_COST_AND_USER_ID_AND_DATE =
-            "SELECT TRIPS.ID FROM TRIPS INNER JOIN PAYMENTS " +
-                    "ON TRIPS.PAYMENT_ID = PAYMENTS.ID INNER JOIN USERS " +
-                    "ON TRIPS.USER_ID = TRIPS.ID WHERE TRIPS.COST = ? AND " +
-                    "AND USERS.ID = ? AND PAYMENT_TIME = (SELECT current_time)";
+            "SELECT TRIPS.ID FROM TRIPS INNER JOIN " +
+                    "PAYMENTS ON TRIPS.PAYMENT_ID = PAYMENTS.ID INNER JOIN " +
+                    "USERS ON TRIPS.USER_ID = USERS.ID " +
+                    "WHERE TRIPS.COST = ? AND USERS.ID = ? AND PAYMENTS.PAYMENT_TIME = (SELECT current_time)";
     /*
     CRUD
      */
@@ -140,7 +140,7 @@ public class TripDAO extends GeneralDAO<Trip> {
             return (Long) query.getSingleResult();
         } catch (DaoException e) {
             throw new HibernateException("Operation with ticket data was filed in method" +
-                    " getTripIdByTripCost(LLong cost) from class " + alarmMessage);
+                    " getTripIdByTripCostAndUserId(Long cost) from class " + alarmMessage);
         }
     }
 }
