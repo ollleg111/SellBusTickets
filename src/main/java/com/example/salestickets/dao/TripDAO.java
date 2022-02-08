@@ -31,7 +31,8 @@ public class TripDAO extends GeneralDAO<Trip> {
                     " TICKETS INNER JOIN TRIPS ON TICKETS.TRIP_ID = TRIPS.ID WHERE TICKETS.ID = ?";
     //TEST OK
     private final String GET_ALL_TRIPS_WITH_DATE_AND_QUANTITY =
-            "SELECT * FROM TRIPS T WHERE (T.DEPARTURE_DATE = current_date OR T.DEPARTURE_DATE > current_date) AND " +
+            "SELECT * FROM TRIPS T WHERE (" +
+                    "T.DEPARTURE_DATE = (SELECT current_date) OR T.DEPARTURE_DATE > (SELECT current_date)) AND " +
                     "T.QUANTITY > 0";
     //TEST_OK
     private final String UPDATE_QUANTITY = "UPDATE TRIPS T SET T.QUANTITY = T.QUANTITY - 1";
@@ -44,7 +45,7 @@ public class TripDAO extends GeneralDAO<Trip> {
 
     //TEST OK
     private final String GET_TRIP_ID_BY_COST = "SELECT TRIPS.ID FROM TRIPS WHERE " +
-            "TRIPS.COST = ? AND TRIPS.DEPARTURE_DATE = current_date";
+            "TRIPS.COST = ? AND TRIPS.DEPARTURE_DATE = (SELECT current_date)";
     /*
     CRUD
      */
