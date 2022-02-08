@@ -28,7 +28,7 @@ public class TripDAO extends GeneralDAO<Trip> {
     private final String FIND_TRIP_INFO_AND_TICKET_STATUS_BY_TICKET_ID =
             "SELECT TRIPS.PLACE_FROM, TRIPS.PLACE_TO, TRIPS.DEPARTURE_DATE," +
                     "TRIPS.COST, TICKETS.TICKET_STATUS FROM" +
-                    " TICKETS INNER JOIN TRIPS ON TICKETS.TRIP_ID = TRIPS.ID WHERE TICKETS.ID = ?";
+                    " TICKETS INNER JOIN TRIPS ON TICKETS.TRIP_ID = TRIPS.ID WHERE TICKETS.ID = ?1";
     //TEST OK
     private final String GET_ALL_TRIPS_WITH_DATE_AND_QUANTITY =
             "SELECT * FROM TRIPS T WHERE (" +
@@ -38,17 +38,17 @@ public class TripDAO extends GeneralDAO<Trip> {
     private final String UPDATE_QUANTITY = "UPDATE TRIPS T SET T.QUANTITY = T.QUANTITY - 1";
     //TEST OK
     private final String VALIDATION_NEW_STATUS =
-            "SELECT TICKET_STATUS FROM TICKETS WHERE TRIP_ID = ? AND TICKET_STATUS = ?";
+            "SELECT TICKET_STATUS FROM TICKETS WHERE TRIP_ID = ?1 AND TICKET_STATUS = ?2";
     //TEST OK
     private final String QUANTITY_TICKETS_IN_THE_TRIP_WHERE_STATUS_FAIL =
-            "SELECT QUANTITY FROM TRIPS WHERE TRIPS.ID = ?";
+            "SELECT QUANTITY FROM TRIPS WHERE TRIPS.ID = ?1";
 
     //TEST OK
     private final String GET_TRIP_ID_BY_COST_AND_USER_ID_AND_DATE =
             "SELECT TRIPS.ID FROM TRIPS INNER JOIN " +
                     "PAYMENTS ON TRIPS.PAYMENT_ID = PAYMENTS.ID INNER JOIN " +
                     "USERS ON TRIPS.USER_ID = USERS.ID " +
-                    "WHERE TRIPS.COST = ? AND USERS.ID = ? AND PAYMENTS.PAYMENT_TIME = (SELECT current_date)";
+                    "WHERE TRIPS.COST = ?1 AND USERS.ID = ?2 AND PAYMENTS.PAYMENT_TIME = (SELECT current_date)";
     /*
     CRUD
      */

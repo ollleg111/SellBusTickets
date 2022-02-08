@@ -23,33 +23,34 @@ public class PaymentDAO extends GeneralDAO<Payment>{
     //TEST OK
     private final String ADD_PAYMENT_BY_USER_ID_AND_COST_AND_PAYMENT_TIME =
             "INSERT INTO PAYMENTS (USER_ID, TRIP_ID, PAYMENT_TIME) values (" +
-                    "USER_ID = ?," +
-                    "(SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?)," +
+                    "USER_ID = ?1," +
+                    "(SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?2)," +
                     "PAYMENT_TIME = (SELECT current_date))";
 
     //TEST OK
     private final String ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID_AND_PAYMENT_TIME =
             "INSERT INTO PAYMENTS (USER_ID, TRIP_ID, PAYMENT_TIME) " +
-                    "values (USER_ID = ?, TRIPS.ID = ?, PAYMENT_TIME = (SELECT current_date))";
+                    "values (USER_ID = ?1, TRIPS.ID = ?2, PAYMENT_TIME = (SELECT current_date))";
 
     //TEST OK
     private final String FIND_TICKET_STATUS_BY_PAYMENT_ID =
             "SELECT TICKET_STATUS FROM TICKETS WHERE TICKETS.TRIP_ID =" +
                     " (SELECT TRIPS.ID FROM PAYMENTS INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID " +
-                    "WHERE PAYMENTS.ID = ?)";
+                    "WHERE PAYMENTS.ID = ?1)";
 
     //TEST OK
     private final String GET_PAYMENT_ID_BY_TRIP_ID_AND_USER_ID_AND_DATE =
             "SELECT PAYMENTS.ID FROM PAYMENTS " +
                     "INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID " +
                     "INNER JOIN USERS ON PAYMENTS.USER_ID = USERS.ID " +
-                    "WHERE TRIPS.ID = ? AND USERS.ID = ? AND PAYMENT_TIME = (SELECT current_date)";
+                    "WHERE TRIPS.ID = ?1 AND USERS.ID = ?2 AND PAYMENT_TIME = (SELECT current_date)";
 
     private final String alarmMessage = PaymentDAO.class.getName();
 
     /*
     CRUD
      */
+
     @Override
     public Payment findById(Long id) throws DaoException {
         return super.findById(id);

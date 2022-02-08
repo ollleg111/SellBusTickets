@@ -19,14 +19,14 @@ public class UserDAO extends GeneralDAO<User> {
     }
 
     private static final String VALIDATION_MAIL_AND_PHONE_NUMBER =
-            "SELECT * FROM USERS WHERE USERS.PHONE_NUMBER = ? AND USERS.E_MAIL = ?";
+            "SELECT * FROM USERS WHERE USERS.PHONE_NUMBER = ?1 AND USERS.E_MAIL = ?2";
 
     private static final String GET_USER =
-            "SELECT * FROM USERS WHERE USERS.E_MAIL = ? AND USERS.PASSWORD = ?";
+            "SELECT * FROM USERS WHERE USERS.E_MAIL = ?1 AND USERS.PASSWORD = ?2";
 
 
     private static final String GET_ID_BY_FIRST_AND_LAST_NAME =
-            "SELECT USERS.ID FROM USERS WHERE USERS.FIRST_NAME = ? AND USERS.LAST_NAME = ?";
+            "SELECT USERS.ID FROM USERS WHERE USERS.FIRST_NAME = ?1 AND USERS.LAST_NAME = ?2";
 
     private String alarmMessage = UserDAO.class.getName();
 
