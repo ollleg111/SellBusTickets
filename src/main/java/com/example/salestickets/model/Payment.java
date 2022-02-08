@@ -32,12 +32,9 @@ public class Payment {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    //TODO добавить поле через Date payment_date = new Date()
-    /*
     @DateTimeFormat
-    @Column(name = "PAYMENT_DATE")
-    private Date payment_date;
-     */
+    @Column(name = "PAYMENT_TIME")
+    private Date payment_time;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "payments_tickets",

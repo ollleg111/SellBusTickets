@@ -47,7 +47,7 @@ public class PaymentService {
         Long userId = userService.findUserIdByFirstAndLastName(firstName, lastName);
         paymentDAO.addPaymentsByUserIdAndCost(userId, cost);
 
-        return paymentDAO.getPaymentIdByUserIdAndTripId(tripDAO.getTripIdByTripCost(cost), userId);
+        return paymentDAO.getPaymentIdByUserIdAndTripId(tripDAO.getTripIdByTripCostAndUserId(cost, userId), userId);
     }
 
     private void paymentValidation(Long id) throws NotFoundException {

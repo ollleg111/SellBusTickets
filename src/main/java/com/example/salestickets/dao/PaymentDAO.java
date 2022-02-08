@@ -21,14 +21,16 @@ public class PaymentDAO extends GeneralDAO<Payment>{
     }
 
     //TEST OK
-    private final String ADD_PAYMENT_BY_USER_ID_AND_COST =
-            "INSERT INTO PAYMENTS (USER_ID, TRIP_ID) " +
-                    "values (USER_ID = ?, (SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?))";
+    private final String ADD_PAYMENT_BY_USER_ID_AND_COST_AND_PAYMENT_TIME =
+            "INSERT INTO PAYMENTS (USER_ID, TRIP_ID, PAYMENT_TIME) values (" +
+                    "USER_ID = ?," +
+                    "(SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?)," +
+                    "PAYMENT_TIME = (SELECT current_time))";
 
     //TEST OK
-    private final String ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID =
-            "INSERT INTO PAYMENTS (USER_ID, TRIP_ID) " +
-                    "values (USER_ID = ?, (TRIPS.ID = ?))";
+    private final String ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID_AND_PAYMENT_TIME =
+            "INSERT INTO PAYMENTS (USER_ID, TRIP_ID, PAYMENT_TIME) " +
+                    "values (USER_ID = ?, TRIPS.ID = ?, PAYMENT_TIME = (SELECT current_time))";
 
     //TEST OK
     private final String FIND_TICKET_STATUS_BY_PAYMENT_ID =
@@ -37,11 +39,11 @@ public class PaymentDAO extends GeneralDAO<Payment>{
                     "WHERE PAYMENTS.ID = ?)";
 
     //TEST OK
-    private final String GET_PAYMENT_ID_BY_TRIP_ID_AND_USER_ID =
+    private final String GET_PAYMENT_ID_BY_TRIP_ID_AND_USER_ID_AND_DATE =
             "SELECT PAYMENTS.ID FROM PAYMENTS " +
                     "INNER JOIN TRIPS ON PAYMENTS.TRIP_ID = TRIPS.ID " +
                     "INNER JOIN USERS ON PAYMENTS.USER_ID = USERS.ID " +
-                    "WHERE TRIPS.ID = ? AND USERS.ID = ?";
+                    "WHERE TRIPS.ID = ? AND USERS.ID = ? AND PAYMENT_TIME = (SELECT current_time)";
 
     private final String alarmMessage = PaymentDAO.class.getName();
 
@@ -82,7 +84,7 @@ public class PaymentDAO extends GeneralDAO<Payment>{
 
     public void addPaymentsByUserIdAndCost(Long userId, Long cost) throws DaoException {
         try {
-            Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_COST);
+            Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_COST_AND_PAYMENT_TIME);
             query.setParameter(1, userId);
             query.setParameter(2, cost);
             query.executeUpdate();
@@ -95,7 +97,7 @@ public class PaymentDAO extends GeneralDAO<Payment>{
     @Transactional
     public void addPaymentByUserIdAndTripId(Long userId, Long tripId) throws DaoException {
         try {
-            Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID);
+            Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID_AND_PAYMENT_TIME);
             query.setParameter(1, userId);
             query.setParameter(2, tripId);
             query.executeUpdate();
@@ -107,9 +109,10 @@ public class PaymentDAO extends GeneralDAO<Payment>{
 
     public Long getPaymentIdByUserIdAndTripId(Long tripId, Long userId) throws DaoException {
         try {
-            Query query = entityManager.createNativeQuery(GET_PAYMENT_ID_BY_TRIP_ID_AND_USER_ID);
+            Query query = entityManager.createNativeQuery(GET_PAYMENT_ID_BY_TRIP_ID_AND_USER_ID_AND_DATE);
             query.setParameter(1, tripId);
             query.setParameter(2, userId);
+
             return (Long) query.getSingleResult();
         } catch (DaoException e) {
             throw new HibernateException("Operation with user data was filed in method" +

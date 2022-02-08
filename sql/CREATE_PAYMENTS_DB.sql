@@ -9,3 +9,5 @@ CREATE TABLE payments (
                           trip_id numeric NOT NULL,
                           CONSTRAINT TRIP_FK FOREIGN KEY (TRIP_ID) REFERENCES TRIPS(ID)
 );
+
+ALTER TABLE payments ADD COLUMN payment_time TIMESTAMP;
