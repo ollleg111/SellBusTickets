@@ -1,3 +1,88 @@
+
+<artifactId>spring-boot-starter-data-jpa</artifactId>
+
+drop sequence if exists users_seq
+Hibernate: create sequence payments_seq start 1 increment 1
+Hibernate: create sequence tickets_seq start 1 increment 1
+Hibernate: create sequence trips_seq start 1 increment 1
+Hibernate: create sequence users_seq start 1 increment 1
+Hibernate:
+
+create table payments (
+                          id int8 not null,
+                          payment_time timestamp,
+                          user_id int8,
+                          primary key (id)
+)
+    Hibernate:
+
+create table payments_tickets (
+                                  ticket_id int8 not null,
+                                  payment_id int8 not null
+)
+    Hibernate:
+
+create table tickets (
+                         id int8 not null,
+                         ticket_status varchar(255),
+                         trip_id int8,
+                         primary key (id)
+)
+    Hibernate:
+
+create table trips (
+                       id int8 not null,
+                       cost int8 not null,
+                       departure_date timestamp,
+                       place_from TEXT not null,
+                       place_to TEXT not null,
+                       quantity int8 not null,
+                       primary key (id)
+)
+    Hibernate:
+
+create table users (
+                       id int8 not null,
+                       first_name TEXT not null,
+                       last_name TEXT not null,
+                       e_mail TEXT not null,
+                       password TEXT not null,
+                       phone_number TEXT not null,
+                       user_status varchar(255),
+                       payment_id int8,
+                       primary key (id)
+)
+    Hibernate:
+
+alter table if exists payments
+    add constraint FKj94hgy9v5fw1munb90tar2eje
+    foreign key (user_id)
+    references users
+    Hibernate:
+
+alter table if exists payments_tickets
+    add constraint FK786tlr4ywm96o9eirtwkvyufo
+    foreign key (payment_id)
+    references tickets
+    Hibernate:
+
+alter table if exists payments_tickets
+    add constraint FK90sinb3fp7chl84puba8q9fuf
+    foreign key (ticket_id)
+    references tickets
+    Hibernate:
+
+alter table if exists tickets
+    add constraint FKbcjlnu2low7r5vfimxextqab9
+    foreign key (trip_id)
+    references trips
+    Hibernate:
+
+alter table if exists users
+    add constraint FKqats52e29m784k0qytay1qvfp
+    foreign key (payment_id)
+    references payments
+
 CREATE SEQUENCE USERS_SEQ INCREMENT BY 1 MAXVALUE 1000 CYCLE;
 CREATE SEQUENCE PAYMENTS_SEQ INCREMENT BY 1 MAXVALUE 1000 CYCLE;
 CREATE SEQUENCE TICKETS_SEQ INCREMENT BY 1 MAXVALUE 1000 CYCLE;
