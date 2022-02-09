@@ -7,7 +7,8 @@ CREATE TABLE payments (
                           user_id numeric NOT NULL,
                           CONSTRAINT USER_FK FOREIGN KEY (USER_ID) REFERENCES USERS(ID),
                           trip_id numeric NOT NULL,
-                          CONSTRAINT TRIP_FK FOREIGN KEY (TRIP_ID) REFERENCES TRIPS(ID)
+                          CONSTRAINT TRIP_FK FOREIGN KEY (TRIP_ID) REFERENCES TRIPS(ID),
+                          payment_time TIMESTAMP
 );
 
 ALTER TABLE payments ADD COLUMN payment_time TIMESTAMP;

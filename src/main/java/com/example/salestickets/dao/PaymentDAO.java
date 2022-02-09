@@ -23,14 +23,12 @@ public class PaymentDAO extends GeneralDAO<Payment>{
     //TEST OK
     private final String ADD_PAYMENT_BY_USER_ID_AND_COST_AND_PAYMENT_TIME =
             "INSERT INTO PAYMENTS (USER_ID, TRIP_ID, PAYMENT_TIME) values (" +
-                    "USER_ID = ?1," +
-                    "(SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?2)," +
-                    "PAYMENT_TIME = (SELECT current_date))";
+                    "USER_ID = ?1, (SELECT TRIPS.ID FROM TRIPS WHERE TRIPS.COST = ?2), (SELECT current_date))";
 
     //TEST OK
     private final String ADD_PAYMENT_BY_USER_ID_AND_TRIP_ID_AND_PAYMENT_TIME =
             "INSERT INTO PAYMENTS (USER_ID, TRIP_ID, PAYMENT_TIME) " +
-                    "values (USER_ID = ?1, TRIPS.ID = ?2, PAYMENT_TIME = (SELECT current_date))";
+                    "values (?1, ?2, (SELECT current_date))";
 
     //TEST OK
     private final String FIND_TICKET_STATUS_BY_PAYMENT_ID =

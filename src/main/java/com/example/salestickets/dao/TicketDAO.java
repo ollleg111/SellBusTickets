@@ -22,7 +22,7 @@ public class TicketDAO extends GeneralDAO<Ticket>{
 
     //TEST OK
     private final String ADD_TICKET_WITH_TRIP_ID_AND_STATUS =
-            "INSERT INTO TICKETS (TRIP_ID, TICKET_STATUS) VALUES (TRIP_ID = ?1, TICKET_STATUS = 'NEW')";
+            "INSERT INTO TICKETS (TRIP_ID, TICKET_STATUS) VALUES (?1, 'NEW')";
 
     //TEST OK
     private final String GET_TICKET_ID_BY_PAYMENT_ID =
