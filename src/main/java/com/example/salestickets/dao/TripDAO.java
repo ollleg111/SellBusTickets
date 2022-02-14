@@ -89,7 +89,7 @@ public class TripDAO extends GeneralDAO<Trip> {
     public void updateQuantity() throws DaoException {
         try {
             Query query = entityManager.createNativeQuery(UPDATE_QUANTITY);
-            query.getSingleResult();
+            query.executeUpdate();
         } catch (DaoException e) {
             throw new HibernateException("Operation with user data was filed in method" +
                     " updateQuantity() from class " + alarmMessage);

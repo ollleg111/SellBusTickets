@@ -81,6 +81,7 @@ public class PaymentDAO extends GeneralDAO<Payment>{
         }
     }
 
+    @Transactional
     public void addPaymentsByUserIdAndCost(Long userId, Long cost) throws DaoException {
         try {
             Query query = entityManager.createNativeQuery(ADD_PAYMENT_BY_USER_ID_AND_COST_AND_PAYMENT_TIME);
